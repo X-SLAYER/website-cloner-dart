@@ -12,11 +12,11 @@ class AppTheme extends ChangeNotifier {
   }
 
   final ThemeData themeData = ThemeData(
-    fontFamily: GoogleFonts.roboto().fontFamily,
+    fontFamily: GoogleFonts.quicksand().fontFamily,
     brightness: Brightness.light,
-    primaryColor: const Color.fromRGBO(0, 68, 105, 1),
+    primaryColor: const Color(0xFF54B689),
     colorScheme: ThemeData().colorScheme.copyWith(
-          secondary: const Color.fromRGBO(184, 0, 0, 1),
+          primary: const Color(0xFF54B689),
           brightness: Brightness.light,
         ),
     backgroundColor: Colors.white,
@@ -25,9 +25,9 @@ class AppTheme extends ChangeNotifier {
   final ThemeData themeDataDark = ThemeData(
     fontFamily: GoogleFonts.roboto().fontFamily,
     brightness: Brightness.dark,
-    primaryColor: const Color.fromRGBO(184, 0, 0, 1),
+    primaryColor: const Color(0xFF5b3ab9),
     colorScheme: ThemeData().colorScheme.copyWith(
-          secondary: const Color.fromRGBO(0, 68, 105, 1),
+          primary: const Color.fromRGBO(0, 68, 105, 1),
           brightness: Brightness.dark,
         ),
   );

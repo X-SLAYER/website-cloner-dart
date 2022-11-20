@@ -1,14 +1,25 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ez_validator/validator/ez_validator_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_updated_boilerplate/constant/regex_list.dart';
 import 'package:flutter_updated_boilerplate/data/network/dio/dio_handler.dart';
 import 'package:flutter_updated_boilerplate/models/media_type.dart';
-import 'package:flutter_updated_boilerplate/utils/app_utils/media_identifier.dart';
+import 'package:flutter_updated_boilerplate/utils/media_identifier.dart';
 import 'package:flutter_updated_boilerplate/utils/app_utils/widget_extensions.dart';
 import 'package:flutter_updated_boilerplate/utils/modals/app_modals.dart';
+
+enum ContentStatus {
+  pending(Colors.orange),
+  success(Colors.green),
+  error(Colors.red);
+
+  final Color color;
+
+  const ContentStatus(this.color);
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,10 +29,22 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  bool isLoading = false;
   final urlValidator = EzValidator().url().build();
   final TextEditingController urlController = TextEditingController();
-  List<MediaModel> mediaList = [];
+  String saveDirectory = '/home/slayer/Desktop/website_cloner';
+  bool isLoading = false;
+  bool isDownloading = false;
+  ValueNotifier<Map<MediaModel, ContentStatus>> mediaList =
+      ValueNotifier<Map<MediaModel, ContentStatus>>({});
+
+  @override
+  void initState() {
+    super.initState();
+    // setState(() {
+    //   saveDirectory = Directory.current.path;
+    // });
+    // log('saveDirectory: $saveDirectory');
+  }
 
   void setLoading(bool value) {
     setState(() {
@@ -29,19 +52,23 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  void setDownloading(bool value) {
+    setState(() {
+      isDownloading = value;
+    });
+  }
+
   void getContent() async {
     setLoading(true);
-    mediaList.clear();
-    Directory('/home/slayer/Desktop/test/assets')
+    mediaList.value.clear();
+    Directory(saveDirectory)
         .create(recursive: true)
         .then((Directory directory) {
-      log(directory.path);
+      log('Directory created at: ${directory.path}');
     });
     DioHandler.getWebsiteContent(urlController.text).then((response) async {
-      File('/home/slayer/Desktop/test/assets/test.html')
-          .writeAsString(response)
-          .then((value) {
-        log('File written');
+      File('$saveDirectory/index.html').writeAsString(response).then((value) {
+        log('index written');
       });
       RegExp(mediaRegex).allMatches(response).forEach((match) {
         if ((!match.group(3).isEmptyOrNull) &&
@@ -49,19 +76,8 @@ class HomePageState extends State<HomePage> {
             isValidMedia(match.group(3)!)) {
           final model = MediaModel.fromRegex(match);
           log('message: $model \n', name: 'MATCHED-ASSETS');
-          mediaList.add(model);
+          mediaList.value[model] = ContentStatus.pending;
         }
-      });
-      await Future.forEach<MediaModel>(mediaList.map((e) => e),
-          (element) async {
-        final path = await Directory(
-                '/home/slayer/Desktop/test/assets/${element.folderPath}')
-            .create(recursive: true);
-        log('path: ${path.path}');
-        await DioHandler.downloadFile(
-          '${urlController.text}${element.mediaPath}',
-          '${path.path}${element.fileName}',
-        );
       });
       setLoading(false);
     }).catchError((error) {
@@ -70,43 +86,173 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> downloadContent() async {
+    setDownloading(true);
+    await Future.forEach<MediaModel>(mediaList.value.keys.map((e) => e),
+        (media) async {
+      final path = await Directory('$saveDirectory/${media.folderPath}')
+          .create(recursive: true);
+      log('path: ${path.path}');
+      try {
+        await DioHandler.downloadFile(
+          '${urlController.text}${media.mediaPath}',
+          '${path.path}${media.fileName}',
+        );
+        mediaList.value[media] = ContentStatus.success;
+      } catch (e) {
+        mediaList.value[media] = ContentStatus.error;
+      }
+    });
+    setDownloading(false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            TextFormField(
-              controller: urlController,
-              decoration: const InputDecoration(
-                labelText: 'Enter URL',
+      body: Column(
+        children: [
+          const SizedBox(height: 10.0),
+          TextFormField(
+            controller: urlController,
+            decoration: InputDecoration(
+              hintText: 'Enter URL',
+              prefixIcon: const Icon(
+                Icons.link,
               ),
-              validator: EzValidator().required().url().build(),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFd0d6db)),
+              ),
+              border: InputBorder.none,
+              fillColor: const Color(0xFFd0d6db).withOpacity(.3),
+              filled: true,
             ),
-            TextButton(
-              onPressed: () {
-                if (urlValidator(urlController.text) != null) {
-                  Toastr.showStaticModal(
-                    context,
-                    'Error',
-                    'Please enter a valid URL',
-                  );
-                  return;
-                }
-                if (isLoading) return;
-                getContent();
-              },
-              child: isLoading
-                  ? const SizedBox(
-                      width: 25.0,
-                      height: 25.0,
-                      child: CircularProgressIndicator(),
-                    )
-                  : const Text('Download'),
-            ),
-          ],
-        ).paddingHV(h: 25.0),
+            validator: EzValidator().required().url().build(),
+          ),
+          const SizedBox(height: 10.0),
+          downloadButton(),
+          const SizedBox(height: 10.0),
+          Expanded(child: contentList())
+        ],
+      ).paddingHV(h: 25.0),
+      floatingActionButton:
+          ValueListenableBuilder<Map<MediaModel, ContentStatus>>(
+        valueListenable: mediaList,
+        builder: ((_, value, __) => value.isEmpty
+            ? const SizedBox.shrink()
+            : FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                onPressed: () async {
+                  if (isDownloading) return;
+                  await downloadContent();
+                },
+                child: isDownloading
+                    ? const SizedBox(
+                        height: 25.0,
+                        width: 25.0,
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : const Icon(
+                        Icons.download,
+                      ),
+              )),
       ),
+    );
+  }
+
+  Widget downloadButton() => TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+        onPressed: () {
+          if (urlValidator(urlController.text) != null) {
+            Toastr.showStaticModal(
+              context,
+              'Error',
+              'Please enter a valid URL',
+            );
+            return;
+          }
+          if (isLoading) return;
+          getContent();
+        },
+        child: isLoading
+            ? const SizedBox(
+                width: 20.0,
+                height: 20.0,
+                child: CircularProgressIndicator(color: Colors.white),
+              )
+            : const Text(
+                'Download',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+      );
+
+  Widget contentList() {
+    return ValueListenableBuilder<Map<MediaModel, ContentStatus>>(
+      valueListenable: mediaList,
+      builder: (_, value, __) {
+        return value.isEmpty
+            ? Center(
+                child: Text(
+                  'There are no assets to download',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              )
+            : ListView.separated(
+                separatorBuilder: (_, __) => const Divider(),
+                shrinkWrap: true,
+                itemCount: value.length,
+                itemBuilder: (_, index) {
+                  final item = value.keys.elementAt(index);
+                  final status = value.values.elementAt(index);
+                  return ListTile(
+                    title: AutoSizeText(
+                      item.fileName,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    trailing: Text(
+                      status.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: status.color,
+                      ),
+                    ),
+                    subtitle: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(.5),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Text(
+                            item.mediaType!.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ).paddingLRTB(t: 5.0),
+                    leading: Icon(
+                      getIconByMediaType(item.mediaType!),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  );
+                },
+              );
+      },
     );
   }
 }
