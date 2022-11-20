@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -48,6 +49,7 @@ Future resolveResponse(Response response) async {
       return response.toString();
     }
   } else {
+    log('Error: $response');
     throw RequestError.fromJson(jsonDecode(response.toString()));
   }
 }

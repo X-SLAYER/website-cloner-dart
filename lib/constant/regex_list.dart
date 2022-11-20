@@ -1,2 +1,2 @@
 const String mediaRegex =
-    r'<(link|img|script).*(href|src|imagesrcset)="(.*?)".*>';
+    r'<(link|img|script).*?(href|src|imagesrcset)="(.*?)".*?>';

@@ -100,6 +100,7 @@ class HomePageState extends State<HomePage> {
         );
         mediaList.value[media] = ContentStatus.success;
       } catch (e) {
+        log('$e', name: 'DOWNLOAD-ERROR');
         mediaList.value[media] = ContentStatus.error;
       }
     });
