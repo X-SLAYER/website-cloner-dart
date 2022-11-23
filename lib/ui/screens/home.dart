@@ -17,7 +17,6 @@ enum ContentStatus {
   error(Colors.red);
 
   final Color color;
-
   const ContentStatus(this.color);
 }
 
@@ -44,6 +43,53 @@ class HomePageState extends State<HomePage> {
     //   saveDirectory = Directory.current.path;
     // });
     // log('saveDirectory: $saveDirectory');
+  }
+
+  void showSettingsDialog() {
+    showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            title: const Text('Settings'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Save Directory',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextField(
+                  controller: TextEditingController(text: saveDirectory),
+                  onChanged: (value) {
+                    setState(() {
+                      saveDirectory = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+            ],
+          )),
+    );
   }
 
   void setLoading(bool value) {
@@ -105,6 +151,9 @@ class HomePageState extends State<HomePage> {
       }
     });
     setDownloading(false);
+    if (mounted) {
+      Toastr.showSuccessModal(context, 'Download Complete');
+    }
   }
 
   @override
@@ -113,21 +162,36 @@ class HomePageState extends State<HomePage> {
       body: Column(
         children: [
           const SizedBox(height: 10.0),
-          TextFormField(
-            controller: urlController,
-            decoration: InputDecoration(
-              hintText: 'Enter URL',
-              prefixIcon: const Icon(
-                Icons.link,
+          Row(
+            children: [
+              Flexible(
+                child: TextFormField(
+                  controller: urlController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter URL',
+                    prefixIcon: const Icon(
+                      Icons.link,
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFd0d6db)),
+                    ),
+                    border: InputBorder.none,
+                    fillColor: const Color(0xFFd0d6db).withOpacity(.3),
+                    filled: true,
+                  ),
+                  validator: EzValidator().required().url().build(),
+                ),
               ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFd0d6db)),
+              IconButton(
+                onPressed: () {
+                  showSettingsDialog();
+                },
+                icon: Icon(
+                  Icons.settings,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
-              border: InputBorder.none,
-              fillColor: const Color(0xFFd0d6db).withOpacity(.3),
-              filled: true,
-            ),
-            validator: EzValidator().required().url().build(),
+            ],
           ),
           const SizedBox(height: 10.0),
           downloadButton(),
