@@ -8,7 +8,10 @@ import 'package:flutter_updated_boilerplate/constant/api_paths.dart';
 import 'package:flutter_updated_boilerplate/data/network/dio/dio_service.dart';
 import 'package:flutter_updated_boilerplate/models/request_error.dart';
 
-Future<Response> getRequest(String endPoint) async {
+Future<Response> getRequest(
+  String endPoint, [
+  dynamic headers = const {},
+]) async {
   final response = await DioService.client.get(
     endPoint,
     options: Options(headers: headers),
@@ -16,7 +19,11 @@ Future<Response> getRequest(String endPoint) async {
   return response;
 }
 
-Future<Response> download(String endPoint, String path) async {
+Future<Response> download(
+  String endPoint,
+  String path, [
+  dynamic headers = const {},
+]) async {
   final response = await DioService.client.get(
     endPoint,
     onReceiveProgress: (count, total) {

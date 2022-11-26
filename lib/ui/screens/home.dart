@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 import 'package:ez_validator/validator/ez_validator_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_updated_boilerplate/constant/regex_list.dart';
 import 'package:flutter_updated_boilerplate/data/network/dio/dio_handler.dart';
 import 'package:flutter_updated_boilerplate/models/media_type.dart';
+import 'package:flutter_updated_boilerplate/ui/screens/headers.dart';
 import 'package:flutter_updated_boilerplate/utils/media_identifier.dart';
 import 'package:flutter_updated_boilerplate/utils/app_utils/widget_extensions.dart';
 import 'package:flutter_updated_boilerplate/utils/modals/app_modals.dart';
@@ -35,36 +37,48 @@ class HomePageState extends State<HomePage> {
   late String saveDirectory;
   ValueNotifier<Map<MediaModel, ContentStatus>> mediaList =
       ValueNotifier<Map<MediaModel, ContentStatus>>({});
+  final TextEditingController headersController = TextEditingController();
 
   void showSettingsDialog() {
     showDialog(
       context: context,
-      builder: ((context) => AlertDialog(
-            title: const Center(child: Text('Settings')),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: const [],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-            ],
-          )),
+      builder: ((context) => StatefulBuilder(builder: (context, setter) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              title: const Center(child: Text('Add headers')),
+              content: HeadersText(controller: headersController),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Map<String, String> headers = {};
+                      log('headers: ${headersController.text}');
+                      if (headersController.text.isNotEmpty) {
+                        headersController.text.split('\n').forEach((e) {
+                          final header = e.split(':');
+                          headers[header.first] = header.last;
+                        });
+                      }
+                      DioHandler.headers = headers;
+                      log('headers: ${DioHandler.headers}');
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+              ],
+            );
+          })),
     );
   }
 
@@ -84,7 +98,7 @@ class HomePageState extends State<HomePage> {
     setLoading(true);
     mediaList.value.clear();
     saveDirectory =
-        '${Directory.current.path}/Result${DateTime.now().millisecondsSinceEpoch}';
+        '${Directory.current.path}/Result${DateFormat('dd_MM_yyyy_hh_mm_ss').format(DateTime.now())}';
     Directory(saveDirectory)
         .create(recursive: true)
         .then((Directory directory) {
