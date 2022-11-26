@@ -1,8 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-/// i use this calss to handle the app context
-/// and navigator context from anywhere in the app
-
 class CurrentApp {
   CurrentApp._();
 

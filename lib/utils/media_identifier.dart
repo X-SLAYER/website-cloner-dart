@@ -32,4 +32,8 @@ IconData getIconByMediaType(MediaType mediaType) {
   return result;
 }
 
+String urlCleaner(String url) => url.endsWith('/') ? url : '$url/';
+String schemaCleaner(String url) =>
+    url.startsWith('/') ? url.substring(1) : url;
+
 bool isValidMedia(String media) => media.split('.').length >= 2;

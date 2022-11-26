@@ -30,45 +30,21 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final urlValidator = EzValidator().url().build();
   final TextEditingController urlController = TextEditingController();
-  String saveDirectory = '/home/slayer/Desktop/website_cloner';
   bool isLoading = false;
   bool isDownloading = false;
+  late String saveDirectory;
   ValueNotifier<Map<MediaModel, ContentStatus>> mediaList =
       ValueNotifier<Map<MediaModel, ContentStatus>>({});
-
-  @override
-  void initState() {
-    super.initState();
-    // setState(() {
-    //   saveDirectory = Directory.current.path;
-    // });
-    // log('saveDirectory: $saveDirectory');
-  }
 
   void showSettingsDialog() {
     showDialog(
       context: context,
       builder: ((context) => AlertDialog(
-            title: const Text('Settings'),
+            title: const Center(child: Text('Settings')),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Save Directory',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextField(
-                  controller: TextEditingController(text: saveDirectory),
-                  onChanged: (value) {
-                    setState(() {
-                      saveDirectory = value;
-                    });
-                  },
-                ),
-              ],
+              children: const [],
             ),
             actions: [
               TextButton(
@@ -107,6 +83,8 @@ class HomePageState extends State<HomePage> {
   void getContent() async {
     setLoading(true);
     mediaList.value.clear();
+    saveDirectory =
+        '${Directory.current.path}/Result${DateTime.now().millisecondsSinceEpoch}';
     Directory(saveDirectory)
         .create(recursive: true)
         .then((Directory directory) {
@@ -117,7 +95,7 @@ class HomePageState extends State<HomePage> {
         log('index written');
       });
       RegExp(mediaRegex).allMatches(response).forEach((match) {
-        if ((!match.group(3).isEmptyOrNull) &&
+        if ((match.group(3) != null) &&
             urlValidator(match.group(3)!) != null &&
             isValidMedia(match.group(3)!)) {
           final model = MediaModel.fromRegex(match);
@@ -141,7 +119,7 @@ class HomePageState extends State<HomePage> {
       log('path: ${path.path}');
       try {
         await DioHandler.downloadFile(
-          '${urlController.text}${media.mediaPath}',
+          '${urlCleaner(urlController.text)}${schemaCleaner(media.mediaPath!)}',
           '${path.path}${media.fileName}',
         );
         mediaList.value[media] = ContentStatus.success;

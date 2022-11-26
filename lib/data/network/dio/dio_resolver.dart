@@ -49,8 +49,12 @@ Future resolveResponse(Response response) async {
       return response.toString();
     }
   } else {
-    log('Error: $response');
-    throw RequestError.fromJson(jsonDecode(response.toString()));
+    log('Error: $response , ${response.statusCode}');
+    throw RequestError(
+      code: response.statusCode,
+      message: response.statusMessage,
+      result: response.data,
+    );
   }
 }
 

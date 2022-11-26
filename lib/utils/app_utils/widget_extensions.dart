@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_updated_boilerplate/data/locale/general_context.dart';
-import 'package:flutter_updated_boilerplate/stores/language/store.dart';
-import 'package:flutter_updated_boilerplate/stores/providers/connectivity_provider.dart';
-import 'package:flutter_updated_boilerplate/utils/app_utils/color_brightness.dart';
-import 'package:provider/provider.dart';
 
 extension ExtendPadding on Widget {
   Widget paddingAll(double value) {
@@ -51,30 +45,9 @@ extension ExtendColors on Color {
   }
 }
 
-extension EntendBoolOnString on String? {
-  bool get isEmptyOrNull => this == null || this!.isEmpty;
-  String get translate => i18n(
-        CurrentApp.navigatorContext,
-        this!.toLowerCase(),
-      );
-  String get toNumFormat {
-    return RegExp(r'^[0-9]$').hasMatch(toString()) ? '0$this' : this!;
-  }
-}
-
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
-  }
-}
-
-extension DurationExtensions on Duration {
-  String get toHoursMinutes {
-    return RegExp(r'^(\d+):(\d+):\d+\.')
-        .firstMatch(toString())!
-        .groups([1, 2])
-        .map((e) => e.toNumFormat)
-        .join(':');
   }
 }
 
@@ -95,31 +68,6 @@ extension SwappableList<E> on List<E> {
     final temp = this[first];
     this[first] = this[second];
     this[second] = temp;
-  }
-}
-
-extension StateLayouts on Widget {
-  Widget withConnectivityLayout() {
-    return Consumer<ConnectivityProvider>(builder: (_, provider, child) {
-      return provider.isOffline
-          ? Stack(
-              children: [
-                this,
-                // OfflineBar(), ur widget to be shown with the layout
-              ],
-            )
-          : this;
-    });
-  }
-
-  Widget withStatusBar({Color color = Colors.white}) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: color,
-        statusBarIconBrightness: ColorBrightness(color).matchedBrightness,
-      ),
-      child: this,
-    );
   }
 }
 
