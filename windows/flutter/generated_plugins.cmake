@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus_windows
   ez_validator
+  file_selector_windows
   window_size
 )
 

@@ -9,7 +9,7 @@ import 'package:website_cloner/models/request_error.dart';
 
 Future<Response> getRequest(
   String endPoint, [
-  dynamic headers = const {},
+  Map<String, dynamic>? headers = const {},
 ]) async {
   final response = await DioService.client.get(
     endPoint,
@@ -21,7 +21,7 @@ Future<Response> getRequest(
 Future<Response> download(
   String endPoint,
   String path, [
-  dynamic headers = const {},
+  Map<String, dynamic>? headers = const {},
 ]) async {
   final response = await DioService.client.get(
     endPoint,
@@ -33,12 +33,13 @@ Future<Response> download(
       }
     },
     options: Options(
-        headers: headers,
-        responseType: ResponseType.bytes,
-        followRedirects: false,
-        validateStatus: (status) {
-          return status != 500;
-        }),
+      headers: headers,
+      responseType: ResponseType.bytes,
+      followRedirects: false,
+      validateStatus: (status) {
+        return status != 500;
+      },
+    ),
   );
   File file = File(path);
   var raf = file.openSync(mode: FileMode.write);

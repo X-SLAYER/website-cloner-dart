@@ -47,6 +47,7 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding
       path: plugins/window_size
+  file_selector: ^0.9.2+3
 
 dev_dependencies:
   flutter_launcher_icons: ^0.10.0
@@ -54,8 +55,8 @@ dev_dependencies:
   flutter_native_splash: ^2.2.7
   flutter_test:
     sdk: flutter
-  rename:
-    git: https://github.com/X-SLAYER/rename.git
+  rename: ^2.1.1
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

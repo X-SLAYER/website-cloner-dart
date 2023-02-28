@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:ez_validator/validator/ez_validator_builder.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class HomePageState extends State<HomePage> {
   final TextEditingController urlController = TextEditingController();
   bool isLoading = false;
   bool isDownloading = false;
-  late String saveDirectory;
+  late String? saveDirectory;
   ValueNotifier<Map<MediaModel, ContentStatus>> mediaList =
       ValueNotifier<Map<MediaModel, ContentStatus>>({});
   final TextEditingController headersController = TextEditingController();
@@ -97,9 +98,9 @@ class HomePageState extends State<HomePage> {
   void getContent() async {
     setLoading(true);
     mediaList.value.clear();
-    saveDirectory =
-        '${Directory.current.path}/Result${DateFormat('dd_MM_yyyy_hh_mm_ss').format(DateTime.now())}';
-    Directory(saveDirectory)
+    saveDirectory = await getDirectoryPath();
+    if (saveDirectory == null) return;
+    Directory(saveDirectory!)
         .create(recursive: true)
         .then((Directory directory) {
       log('Directory created at: ${directory.path}');
@@ -147,6 +148,7 @@ class HomePageState extends State<HomePage> {
       Toastr.showSuccessModal(context, 'Download Complete');
     }
   }
+  //https://arbal.github.io/awesome-stars/assets/css/style.css?v=f9c04711779e7c206691b7d040ca8f9e899526f8
 
   @override
   Widget build(BuildContext context) {

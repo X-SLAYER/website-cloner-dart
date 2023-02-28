@@ -18,4 +18,9 @@ class RequestError {
     data['result'] = result;
     return data;
   }
+
+  @override
+  String toString() {
+    return '${toJson()}';
+  }
 }

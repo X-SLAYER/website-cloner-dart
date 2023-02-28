@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.quicksand().fontFamily,
         brightness: Brightness.light,
         primaryColor: const Color(0xFF54B689),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ThemeData().colorScheme.copyWith(
               primary: const Color(0xFF54B689),
               secondary: const Color(0xFF439C9D),
