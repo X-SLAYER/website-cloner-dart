@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_updated_boilerplate/utils/dio_logger.dart';
+import 'package:website_cloner/utils/dio_logger.dart';
 
 class DioService {
   static Dio? _dio;

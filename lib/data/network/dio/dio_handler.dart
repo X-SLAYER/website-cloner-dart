@@ -1,4 +1,4 @@
-import 'package:flutter_updated_boilerplate/data/network/dio/dio_resolver.dart';
+import 'package:website_cloner/data/network/dio/dio_resolver.dart';
 
 class DioHandler {
   DioHandler._();

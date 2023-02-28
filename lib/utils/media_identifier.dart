@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_updated_boilerplate/constant/media_extensions.dart';
-import 'package:flutter_updated_boilerplate/models/media_type.dart';
+import 'package:website_cloner/constant/media_extensions.dart';
+import 'package:website_cloner/models/media_type.dart';
 
 MediaType findMediaByExtension(String extension) {
   MediaType result = MediaType.other;

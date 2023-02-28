@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter_updated_boilerplate/data/locale/general_context.dart';
-import 'package:flutter_updated_boilerplate/routers.dart';
-import 'package:flutter_updated_boilerplate/ui/screens/home.dart';
+import 'package:website_cloner/data/locale/general_context.dart';
+import 'package:website_cloner/routers.dart';
+import 'package:website_cloner/ui/screens/home.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
               primary: const Color(0xFF54B689),
               secondary: const Color(0xFF439C9D),
               brightness: Brightness.light,
+              background: Colors.white,
             ),
-        backgroundColor: Colors.white,
       ),
       home: const HomePage(),
       routes: Routes.routes,

@@ -1,4 +1,4 @@
-import 'package:flutter_updated_boilerplate/utils/media_identifier.dart';
+import 'package:website_cloner/utils/media_identifier.dart';
 
 enum MediaType { image, audio, video, other }
 

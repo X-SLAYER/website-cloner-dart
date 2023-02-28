@@ -5,13 +5,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'package:ez_validator/validator/ez_validator_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_updated_boilerplate/constant/regex_list.dart';
-import 'package:flutter_updated_boilerplate/data/network/dio/dio_handler.dart';
-import 'package:flutter_updated_boilerplate/models/media_type.dart';
-import 'package:flutter_updated_boilerplate/ui/screens/headers.dart';
-import 'package:flutter_updated_boilerplate/utils/media_identifier.dart';
-import 'package:flutter_updated_boilerplate/utils/app_utils/widget_extensions.dart';
-import 'package:flutter_updated_boilerplate/utils/modals/app_modals.dart';
+import 'package:website_cloner/constant/regex_list.dart';
+import 'package:website_cloner/data/network/dio/dio_handler.dart';
+import 'package:website_cloner/models/media_type.dart';
+import 'package:website_cloner/ui/screens/headers.dart';
+import 'package:website_cloner/utils/media_identifier.dart';
+import 'package:website_cloner/utils/app_utils/widget_extensions.dart';
+import 'package:website_cloner/utils/modals/app_modals.dart';
 
 enum ContentStatus {
   pending(Colors.orange),
@@ -254,7 +254,7 @@ class HomePageState extends State<HomePage> {
             ? Center(
                 child: Text(
                   'There are no assets to download',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               )
             : ListView.separated(

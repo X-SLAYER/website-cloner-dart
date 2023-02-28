@@ -4,9 +4,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_updated_boilerplate/constant/api_paths.dart';
-import 'package:flutter_updated_boilerplate/data/network/dio/dio_service.dart';
-import 'package:flutter_updated_boilerplate/models/request_error.dart';
+import 'package:website_cloner/data/network/dio/dio_service.dart';
+import 'package:website_cloner/models/request_error.dart';
 
 Future<Response> getRequest(
   String endPoint, [

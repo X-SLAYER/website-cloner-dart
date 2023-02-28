@@ -1,4 +1,4 @@
-import 'package:flutter_updated_boilerplate/models/media_type.dart';
+import 'package:website_cloner/models/media_type.dart';
 
 const Map<MediaType, List<String>> mediaExtensions = {
   MediaType.audio: [
@@ -195,5 +195,4 @@ const Map<MediaType, List<String>> mediaExtensions = {
     "heic",
     "heif"
   ],
-  
 };

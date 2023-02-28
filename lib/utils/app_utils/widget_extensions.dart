@@ -78,7 +78,6 @@ extension Behaviour on Widget {
 }
 
 class DragGlowBehaviour extends ScrollBehavior {
-  @override
   Widget buildViewportChrome(
       BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
