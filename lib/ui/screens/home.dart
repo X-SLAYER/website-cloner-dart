@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_selector/file_selector.dart';
-import 'package:intl/intl.dart';
 import 'package:ez_validator/validator/ez_validator_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:website_cloner/constant/regex_list.dart';
@@ -45,39 +44,26 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: ((context) => StatefulBuilder(builder: (context, setter) {
             return AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
               contentPadding: EdgeInsets.zero,
               title: const Center(child: Text('Add headers')),
-              content: HeadersText(controller: headersController),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                TextButton(
-                    onPressed: () {
-                      Map<String, String> headers = {};
-                      log('headers: ${headersController.text}');
-                      if (headersController.text.isNotEmpty) {
-                        headersController.text.split('\n').forEach((e) {
-                          final header = e.split(':');
-                          headers[header.first] = header.last;
-                        });
-                      }
-                      DioHandler.headers = headers;
-                      log('headers: ${DioHandler.headers}');
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-              ],
+              content: HeadersText(
+                controller: headersController,
+                onSubmit: () {
+                  Map<String, String> headers = {};
+                  log('headers: ${headersController.text}');
+                  if (headersController.text.isNotEmpty) {
+                    headersController.text.split('\n').forEach((e) {
+                      final header = e.split(':');
+                      headers[header.first] = header.last;
+                    });
+                  }
+                  DioHandler.headers = headers;
+                  log('headers: ${DioHandler.headers}');
+                  Navigator.pop(context);
+                },
+              ),
             );
           })),
     );
@@ -96,10 +82,10 @@ class HomePageState extends State<HomePage> {
   }
 
   void getContent() async {
-    setLoading(true);
     mediaList.value.clear();
     saveDirectory = await getDirectoryPath();
     if (saveDirectory == null) return;
+    setLoading(true);
     Directory(saveDirectory!)
         .create(recursive: true)
         .then((Directory directory) {
@@ -218,34 +204,39 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget downloadButton() => TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-        onPressed: () {
-          if (urlValidator(urlController.text) != null) {
-            Toastr.showStaticModal(
-              context,
-              'Error',
-              'Please enter a valid URL',
-            );
-            return;
-          }
-          if (isLoading) return;
-          getContent();
-        },
-        child: isLoading
-            ? const SizedBox(
-                width: 20.0,
-                height: 20.0,
-                child: CircularProgressIndicator(color: Colors.white),
-              )
-            : const Text(
-                'Download',
-                style: TextStyle(
-                  color: Colors.white,
+  Widget downloadButton() => SizedBox(
+        width: MediaQuery.of(context).size.width * .35,
+        height: 35.0,
+        child: TextButton.icon(
+          style: TextButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {
+            if (isLoading) return;
+            if (urlValidator(urlController.text) != null) {
+              Toastr.showStaticModal(
+                context,
+                'Error',
+                'Please enter a valid URL',
+              );
+              return;
+            }
+            getContent();
+          },
+          icon: const Icon(Icons.download, color: Colors.white),
+          label: isLoading
+              ? const SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: CircularProgressIndicator(color: Colors.white),
+                )
+              : const Text(
+                  'Download',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
-              ),
+        ),
       );
 
   Widget contentList() {
