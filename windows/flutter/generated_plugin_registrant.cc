@@ -7,15 +7,12 @@
 #include "generated_plugin_registrant.h"
 
 #include <connectivity_plus_windows/connectivity_plus_windows_plugin.h>
-#include <ez_validator/ez_validator_plugin.h>
 #include <file_selector_windows/file_selector_windows.h>
 #include <window_size/window_size_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   ConnectivityPlusWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ConnectivityPlusWindowsPlugin"));
-  EzValidatorPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("EzValidatorPlugin"));
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   WindowSizePluginRegisterWithRegistrar(

@@ -33,7 +33,6 @@ dependencies:
   connectivity_plus: ^2.3.4
   cupertino_icons: ^1.0.5
   dio: ^5.0.1
-  ez_validator: ^0.1.5
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -43,6 +42,10 @@ dependencies:
   google_fonts: ^4.0.3
   intl: ^0.17.0
   provider: ^6.0.5
+  ez_validator:
+    git:
+      url: https://github.com/X-SLAYER/EzValidator.git
+      ref: refactor
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding

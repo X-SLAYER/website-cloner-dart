@@ -188,10 +188,11 @@ packages:
   ez_validator:
     dependency: "direct main"
     description:
-      name: ez_validator
-      sha256: "533a9c73618623db419771617d721cea94d4e39191490af14b1a3c5813bed9d2"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: refactor
+      resolved-ref: "884adf3a6466f3fed7bc38ea8c9a4b44da196e6c"
+      url: "https://github.com/X-SLAYER/EzValidator.git"
+    source: git
     version: "0.1.5"
   fake_async:
     dependency: transitive

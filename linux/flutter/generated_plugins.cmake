@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  ez_validator
   file_selector_linux
   window_size
 )
