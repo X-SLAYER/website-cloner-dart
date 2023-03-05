@@ -1,16 +1,15 @@
-# Website Cloner
+# Website Cloner 
+<img src='assets/images/logo.png' height='120'/>
 
-A new Flutter project.
+A desktop app that allow users to download website files on computer , it help to download a full frontend source code html,css,js,images ...
 
-## Getting Started
+## Platform Support
 
-This project is a starting point for a Flutter application.
+| Linux | macOS | Windows |
+| :---: | :---: | :-----: |
+|   ✅  |   ❌  |    ✅   |
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ScreenShots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+|<img src="https://user-images.githubusercontent.com/22800380/222966319-836f6a47-b0c1-4e51-8ce8-bc92e9652bfd.png" height='500'/>|<img src="https://user-images.githubusercontent.com/22800380/222966420-a33abc79-d686-4916-9c68-5be855c3d64d.png" height='500'/>
