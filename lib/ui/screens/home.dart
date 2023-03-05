@@ -12,6 +12,7 @@ import 'package:website_cloner/ui/screens/headers.dart';
 import 'package:website_cloner/utils/media_identifier.dart';
 import 'package:website_cloner/utils/app_utils/widget_extensions.dart';
 import 'package:website_cloner/utils/modals/app_modals.dart';
+import 'package:website_cloner/widgets/winform.dart';
 
 enum ContentStatus {
   pending(Colors.orange),
@@ -47,7 +48,6 @@ class HomePageState extends State<HomePage> {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               contentPadding: EdgeInsets.zero,
-              title: const Center(child: Text('Add headers')),
               content: HeadersText(
                 controller: headersController,
                 onSubmit: () {
@@ -139,46 +139,48 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 10.0),
-          Row(
-            children: [
-              Flexible(
-                child: TextFormField(
-                  controller: urlController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter URL',
-                    prefixIcon: const Icon(
-                      Icons.link,
+      body: MainWinForm(
+        child: Column(
+          children: [
+            const SizedBox(height: 10.0),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    controller: urlController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter URL',
+                      prefixIcon: const Icon(
+                        Icons.link,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFd0d6db)),
+                      ),
+                      border: InputBorder.none,
+                      fillColor: const Color(0xFFd0d6db).withOpacity(.3),
+                      filled: true,
                     ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFd0d6db)),
-                    ),
-                    border: InputBorder.none,
-                    fillColor: const Color(0xFFd0d6db).withOpacity(.3),
-                    filled: true,
+                    validator: EzValidator().required().url().build(),
                   ),
-                  validator: EzValidator().required().url().build(),
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  showSettingsDialog();
-                },
-                icon: Icon(
-                  Icons.settings,
-                  color: Theme.of(context).colorScheme.secondary,
+                IconButton(
+                  onPressed: () {
+                    showSettingsDialog();
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          downloadButton(),
-          const SizedBox(height: 10.0),
-          Expanded(child: contentList())
-        ],
-      ).paddingHV(h: 25.0),
+              ],
+            ),
+            const SizedBox(height: 10.0),
+            downloadButton(),
+            const SizedBox(height: 10.0),
+            Expanded(child: contentList())
+          ],
+        ).paddingHV(h: 25.0),
+      ),
       floatingActionButton:
           ValueListenableBuilder<Map<MediaModel, ContentStatus>>(
         valueListenable: mediaList,
@@ -223,7 +225,8 @@ class HomePageState extends State<HomePage> {
             }
             getContent();
           },
-          icon: const Icon(Icons.download, color: Colors.white),
+          icon: const Icon(Icons.download, color: Colors.white)
+              .visibleWhen(!isLoading),
           label: isLoading
               ? const SizedBox(
                   width: 20.0,

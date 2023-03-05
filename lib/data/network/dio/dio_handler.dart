@@ -11,8 +11,8 @@ class DioHandler {
     );
   }
 
-  static Future downloadFile(String url, String path) async {
-    return resolveResponse(
+  static Future<bool> downloadFile(String url, String path) async {
+    return resolveDownload(
       await download(url, path, {}),
     );
   }

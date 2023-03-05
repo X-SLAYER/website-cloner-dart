@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:website_cloner/data/locale/general_context.dart';
 import 'package:website_cloner/routers.dart';
 import 'package:website_cloner/ui/screens/home.dart';
@@ -16,6 +17,15 @@ void main() async {
     setWindowMaxSize(const Size(639.0, 500.0));
     setWindowMinSize(const Size(639.0, 500.0));
   }
+  doWhenWindowReady(() {
+    const initialSize = Size(639.0, 500.0);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.maxSize = initialSize;
+    appWindow.minSize = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
@@ -26,6 +36,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: const Locale('en'),
       key: CurrentApp.appKey,
       navigatorKey: CurrentApp.navigatorKey,
       localizationsDelegates: const [

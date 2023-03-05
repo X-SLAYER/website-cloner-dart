@@ -65,6 +65,19 @@ Future resolveResponse(Response response) async {
   }
 }
 
+Future<bool> resolveDownload(Response response) async {
+  if (response.data != null) {
+    return true;
+  } else {
+    log('Error: $response , ${response.statusCode}');
+    throw RequestError(
+      code: response.statusCode,
+      message: response.statusMessage,
+      result: response.data,
+    );
+  }
+}
+
 Future<int> resolveStatusCode(Response response) async => response.statusCode!;
 
 bool isSuccessful(int status) => status >= 200 && status <= 300;
