@@ -1,0 +1,9 @@
+app_id: d0773cc1-e27e-4f72-8985-6894ad6a7ec5
+publisher: X-SLAYER
+publisher_url: https://github.com/X-SLAYER
+display_name: Website Cloner
+create_desktop_icon: true
+launch_at_startup: false
+# install_dir_name: "C:\\websiteCloner"
+locales:
+  - en
