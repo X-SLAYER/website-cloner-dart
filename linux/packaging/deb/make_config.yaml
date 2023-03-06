@@ -1,0 +1,37 @@
+display_name: Website Cloner
+
+package_name: website-cloner
+
+maintainer:
+  name: Iheb
+  email: iheb@pixelium.tn
+
+priority: optional
+
+section: x11
+
+installed_size: 8000
+
+essential: false
+
+postinstall_scripts:
+  - echo "Website Cloner has been installed ^_^"
+postuninstall_scripts:
+  - echo "GoodBy -_-"
+
+icon: assets/images/logo.png
+
+keywords:
+  - Website
+  - Cloner
+  - Slayer
+  - Application
+
+generic_name: Cloner
+
+categories:
+  - Tools
+  - Utility
+  - Applications
+
+startup_notify: true

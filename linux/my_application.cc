@@ -1,6 +1,5 @@
-#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
-
 #include "my_application.h"
+#include <bitsdojo_window_linux/bitsdojo_window_plugin.h>
 
 #include <flutter_linux/flutter_linux.h>
 #ifdef GDK_WINDOWING_X11
@@ -42,11 +41,11 @@ static void my_application_activate(GApplication* application) {
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "website_cloner_dart");
+    gtk_header_bar_set_title(header_bar, "website_cloner");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "website_cloner_dart");
+    gtk_window_set_title(window, "website_cloner");
   }
 
   auto bdw = bitsdojo_window_from(window);
